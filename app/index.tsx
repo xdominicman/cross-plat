@@ -13,7 +13,7 @@ export default function Index() {
   return (
     <View style={{ flex: 1, padding: 20 }}>
       <Pressable
-        onPress={() => router.push("/addPost")}
+        onPress={() => router.push("../addPost")}
         style={{ backgroundColor: "blue", padding: 10, marginBottom: 10 }}
       >
         <Text style={{ color: "white", textAlign: "center" }}>
@@ -27,7 +27,7 @@ export default function Index() {
           <Pressable
             onPress={() =>
               router.push({
-                pathname: "/postDetail",
+                pathname: "../postDetail",
                 params: { id: item.id, userId: item.userId },
               })
             }
