@@ -29,6 +29,8 @@
       "expo-router",
       [
         "expo-splash-screen",
+        "expo-camera",
+        "expo-media-library",
         {
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
