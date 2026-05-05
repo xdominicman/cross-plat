@@ -1,0 +1,58 @@
+
+> week8@1.0.0 start
+> expo start --localhost
+
+env: load .env.local
+env: export EXPO_PUBLIC_API_URL
+Starting project at C:\Users\darry\StickerSmash
+React Compiler enabled
+Starting Metro Bundler
+
+Waiting on http://localhost:8081
+Logs for your project will appear below.
+Web node_modules\expo-router\entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web node_modules\expo-router\entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+λ node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web node_modules\expo-router\entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+λ node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js ░░░░░░░░░░░░░░░░  1.0% (1/1)
+Web node_modules\expo-router\entry.js ▓▓▓▓░░░░░░░░░░░░ 25.0% ( 17/110)
+λ node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js ▓▓▓▓▓░░░░░░░░░░░ 32.7% (24/42)
+Web node_modules\expo-router\entry.js ▓▓▓▓░░░░░░░░░░░░ 25.0% ( 46/176)
+λ node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js ▓▓▓▓▓▓░░░░░░░░░░ 40.0% (38/64)
+Web node_modules\expo-router\entry.js ▓▓▓▓░░░░░░░░░░░░ 25.0% (108/266)
+λ node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js ▓▓▓▓▓▓░░░░░░░░░░ 40.0% ( 76/215)
+Web node_modules\expo-router\entry.js ▓▓▓▓░░░░░░░░░░░░ 25.0% (153/360)
+λ node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js ▓▓▓▓▓▓░░░░░░░░░░ 40.0% (114/276)
+Web node_modules\expo-router\entry.js ▓▓▓▓▓░░░░░░░░░░░ 37.0% (269/442)
+λ node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js ▓▓▓▓▓▓░░░░░░░░░░ 40.0% (124/293)
+Web node_modules\expo-router\entry.js ▓▓▓▓▓░░░░░░░░░░░ 37.2% (288/472)
+λ node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js ▓▓▓▓▓▓░░░░░░░░░░ 40.0% (247/456)
+Web node_modules\expo-router\entry.js ▓▓▓▓▓▓▓░░░░░░░░░ 48.1% (371/535)
+λ node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js ▓▓▓▓▓▓░░░░░░░░░░ 40.0% (262/484)
+Web node_modules\expo-router\entry.js ▓▓▓▓▓▓▓▓▓░░░░░░░ 58.0% (461/623)
+λ node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js ▓▓▓▓▓▓▓░░░░░░░░░ 45.3% (375/565)
+Web node_modules\expo-router\entry.js ▓▓▓▓▓▓▓▓▓░░░░░░░ 58.0% (477/635)
+λ node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js ▓▓▓▓▓▓▓▓░░░░░░░░ 55.3% (486/654)
+Web node_modules\expo-router\entry.js ▓▓▓▓▓▓▓▓▓▓▓░░░░░ 74.7% (611/707)
+λ node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js ▓▓▓▓▓▓▓▓▓▓░░░░░░ 68.1% (600/727)
+Web node_modules\expo-router\entry.js ▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░ 88.2% (707/753)
+λ node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js ▓▓▓▓▓▓▓▓▓▓▓░░░░░ 70.9% (672/798)
+Web node_modules\expo-router\entry.js ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 98.6% (853/859)
+λ node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 95.8% (843/864)
+λ Bundled 54976ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (908 modules)
+Web node_modules\expo-router\entry.js ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 98.8% (856/861)
+Web Bundled 57223ms node_modules\expo-router\entry.js (861 modules)
+
+Metro error: (0 , _reactNativeWebDistIndex.codegenNativeComponent) is not a function
+
+  TypeError: (0 , _reactNativeWebDistIndex.codegenNativeComponent) is not a function
+    at factory (C:\Users\darry\StickerSmash\node_modules\react-native-maps\src\specs\NativeComponentGooglePolygon.ts:102:38)
+    at loadModuleImplementation (C:\Users\darry\StickerSmash\node_modules\expo\node_modules\@expo\cli\build\metro-require\require.js:248:36)
+    at guardedLoadModule (C:\Users\darry\StickerSmash\node_modules\expo\node_modules\@expo\cli\build\metro-require\require.js:163:16)
+    at require (C:\Users\darry\StickerSmash\node_modules\expo\node_modules\@expo\cli\build\metro-require\require.js:74:75)
+    at factory (C:\Users\darry\StickerSmash\node_modules\react-native-maps\src\decorateMapComponent.ts:23:1)
+    at loadModuleImplementation (C:\Users\darry\StickerSmash\node_modules\expo\node_modules\@expo\cli\build\metro-require\require.js:248:36)
+    at guardedLoadModule (C:\Users\darry\StickerSmash\node_modules\expo\node_modules\@expo\cli\build\metro-require\require.js:163:16)
+    at require (C:\Users\darry\StickerSmash\node_modules\expo\node_modules\@expo\cli\build\metro-require\require.js:74:75)
+    at factory (C:\Users\darry\StickerSmash\node_modules\react-native-maps\src\MapMarker.tsx:11:1)
+    at loadModuleImplementation (C:\Users\darry\StickerSmash\node_modules\expo\node_modules\@expo\cli\build\metro-require\require.js:248:36)

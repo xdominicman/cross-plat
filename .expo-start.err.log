@@ -1,0 +1,43 @@
+The following packages should be updated for best compatibility with the installed expo version:
+  expo-camera@17.0.10 - expected version: ~55.0.16
+  expo-file-system@19.0.22 - expected version: ~55.0.17
+  expo-font@14.0.11 - expected version: ~55.0.6
+  expo-haptics@15.0.8 - expected version: ~55.0.14
+  expo-image@3.0.11 - expected version: ~55.0.9
+  expo-image-picker@17.0.11 - expected version: ~55.0.19
+  expo-media-library@18.2.1 - expected version: ~55.0.15
+  expo-status-bar@3.0.9 - expected version: ~55.0.5
+  expo-symbols@1.0.8 - expected version: ~55.0.7
+  expo-system-ui@6.0.9 - expected version: ~55.0.16
+  expo-web-browser@15.0.11 - expected version: ~55.0.14
+  react@19.1.0 - expected version: 19.2.0
+  react-dom@19.1.0 - expected version: 19.2.0
+  react-native@0.81.5 - expected version: 0.83.6
+  react-native-gesture-handler@2.28.0 - expected version: ~2.30.0
+  react-native-reanimated@4.1.7 - expected version: 4.2.1
+  react-native-screens@4.16.0 - expected version: ~4.23.0
+  react-native-worklets@0.5.1 - expected version: 0.7.4
+  @types/react@19.1.17 - expected version: ~19.2.10
+  eslint-config-expo@10.0.0 - expected version: ~55.0.0
+Your project may not work correctly until you install the expected versions of the packages.
+C:\Users\darry\StickerSmash\node_modules\expo\node_modules\@expo\cli\build\src\utils\errors.js:130
+    throw error;
+    ^
+
+Error: ENOENT: no such file or directory, watch 'C:\Users\darry\StickerSmash\node_modules\@react-native\.gradle-plugin-brBg8fps\react-native-gradle-plugin\src\test\kotlin\com\facebook\react\tasks\internal\utils'
+    at FSWatcher.<computed> (node:internal/fs/watchers:316:19)
+    at Object.watch (node:fs:2538:36)
+    at FallbackWatcher.#watchdir (C:\Users\darry\StickerSmash\node_modules\metro-file-map\src\watchers\FallbackWatcher.js:133:33)
+    at C:\Users\darry\StickerSmash\node_modules\metro-file-map\src\watchers\FallbackWatcher.js:233:31
+    at Walker.<anonymous> (C:\Users\darry\StickerSmash\node_modules\metro-file-map\src\watchers\FallbackWatcher.js:378:5)
+    at Walker.emit (node:events:509:28)
+    at C:\Users\darry\StickerSmash\node_modules\walker\lib\walker.js:69:16
+    at FSReqCallback.oncomplete (node:fs:185:23) {
+  errno: -4058,
+  syscall: 'watch',
+  code: 'ENOENT',
+  path: 'C:\\Users\\darry\\StickerSmash\\node_modules\\@react-native\\.gradle-plugin-brBg8fps\\react-native-gradle-plugin\\src\\test\\kotlin\\com\\facebook\\react\\tasks\\internal\\utils',
+  filename: 'C:\\Users\\darry\\StickerSmash\\node_modules\\@react-native\\.gradle-plugin-brBg8fps\\react-native-gradle-plugin\\src\\test\\kotlin\\com\\facebook\\react\\tasks\\internal\\utils'
+}
+
+Node.js v24.15.0

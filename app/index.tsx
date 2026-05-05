@@ -1,117 +1,116 @@
-import { Camera } from "expo-camera";
-import * as FileSystem from "expo-file-system";
-import * as ImagePicker from "expo-image-picker";
-import * as MediaLibrary from "expo-media-library";
-import { useState } from "react";
-import { Alert, Button, Image, StyleSheet, Text, View } from "react-native";
+import * as Location from "expo-location";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, Alert, StyleSheet, Text, View } from "react-native";
+import type { LatLng, MapPressEvent, Region } from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 
-/**
- * Pastikan anda sudah menginstal library berikut:
- * npx expo install expo-camera expo-media-library expo-image-picker expo-file-system
- * * Dan tambahkan plugin pada app.json sesuai Modul 9:
- * "plugins": [
- * "expo-camera",
- * "expo-media-library"
- * ]
- */
+const DEFAULT_DELTA = 0.01;
 
 export default function Index() {
-  const [image, setImage] = useState<string | null>(null);
+  const [coordinate, setCoordinate] = useState<LatLng | null>(null);
+  const [region, setRegion] = useState<Region | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const openCamera = async () => {
-    const permission = await Camera.requestCameraPermissionsAsync();
-    if (!permission.granted) {
-      Alert.alert("Permission Required", "Camera permission is required!");
-      return;
-    }
+  useEffect(() => {
+    const getCurrentLocation = async () => {
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
 
-    const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
-    });
+        if (status !== "granted") {
+          Alert.alert(
+            "Permission Required",
+            "Location permission is required to show your current location.",
+          );
+          return;
+        }
 
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
+        const currentLocation = await Location.getCurrentPositionAsync({});
+        const currentCoordinate = {
+          latitude: currentLocation.coords.latitude,
+          longitude: currentLocation.coords.longitude,
+        };
 
-  const openGallery = async () => {
-    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permission.granted) {
-      Alert.alert("Permission Required", "Gallery permission is required!");
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
-
-  const saveImage = async () => {
-    if (!image) {
-      Alert.alert("Error", "No image selected to save.");
-      return;
-    }
-
-    // Meminta izin akses ke Media Library untuk menyimpan ke Gallery
-    const { status } = await MediaLibrary.requestPermissionsAsync();
-    if (status !== "granted") {
-      Alert.alert(
-        "Permission Required",
-        "Need permission to save images to gallery.",
-      );
-      return;
-    }
-
-    try {
-      // Menggunakan FileSystem untuk memverifikasi keberadaan file (Sesuai instruksi TUGAS)
-      const fileInfo = await FileSystem.getInfoAsync(image);
-
-      if (fileInfo.exists) {
-        // Menyimpan asset ke Gallery menggunakan MediaLibrary
-        const asset = await MediaLibrary.createAssetAsync(image);
-
-        // Membuat album khusus atau langsung simpan ke folder default gallery
-        await MediaLibrary.createAlbumAsync("RecycleApp", asset, false);
-
+        setCoordinate(currentCoordinate);
+        setRegion({
+          ...currentCoordinate,
+          latitudeDelta: DEFAULT_DELTA,
+          longitudeDelta: DEFAULT_DELTA,
+        });
+      } catch (error) {
+        console.log(error);
         Alert.alert(
-          "Success",
-          "Image has been successfully saved to your gallery!",
+          "Error",
+          "An error occurred while getting your current location.",
         );
-      } else {
-        Alert.alert("Error", "File does not exist on the temporary path.");
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.log(error);
-      Alert.alert("Error", "An error occurred while saving the image.");
-    }
+    };
+
+    getCurrentLocation();
+  }, []);
+
+  const updateMarkerPosition = (newCoordinate: LatLng) => {
+    setCoordinate(newCoordinate);
+    setRegion((currentRegion) => ({
+      latitude: newCoordinate.latitude,
+      longitude: newCoordinate.longitude,
+      latitudeDelta: currentRegion?.latitudeDelta ?? DEFAULT_DELTA,
+      longitudeDelta: currentRegion?.longitudeDelta ?? DEFAULT_DELTA,
+    }));
   };
+
+  const handleMapPress = (event: MapPressEvent) => {
+    updateMarkerPosition(event.nativeEvent.coordinate);
+  };
+
+  if (isLoading) {
+    return (
+      <View style={styles.centeredContainer}>
+        <ActivityIndicator size="large" color="#2563eb" />
+        <Text style={styles.loadingText}>Mengambil lokasi saat ini...</Text>
+      </View>
+    );
+  }
+
+  if (!coordinate || !region) {
+    return (
+      <View style={styles.centeredContainer}>
+        <Text style={styles.errorText}>Lokasi tidak dapat ditampilkan.</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Darryl - [NIM]</Text>
+      <MapView
+        style={styles.map}
+        region={region}
+        showsUserLocation
+        showsMyLocationButton
+        onPress={handleMapPress}
+        onRegionChangeComplete={setRegion}
+      >
+        <Marker
+          coordinate={coordinate}
+          draggable
+          title="Lokasi dipilih"
+          description="Tap peta atau geser marker untuk mengubah posisi"
+          onDragEnd={(event) =>
+            updateMarkerPosition(event.nativeEvent.coordinate)
+          }
+        />
+      </MapView>
 
-      <View style={styles.button}>
-        <Button title="OPEN CAMERA" onPress={openCamera} />
+      <View style={styles.infoPanel}>
+        <Text style={styles.title}>Koordinat Marker</Text>
+        <Text style={styles.coordinateText}>
+          Latitude: {coordinate.latitude.toFixed(6)}
+        </Text>
+        <Text style={styles.coordinateText}>
+          Longitude: {coordinate.longitude.toFixed(6)}
+        </Text>
       </View>
-
-      <View style={styles.button}>
-        <Button title="OPEN GALLERY" onPress={openGallery} />
-      </View>
-
-      {image && (
-        <View style={styles.previewContainer}>
-          <Image source={{ uri: image }} style={styles.image} />
-          <View style={styles.button}>
-            <Button title="SAVE IMAGE" color="#2ecc71" onPress={saveImage} />
-          </View>
-        </View>
-      )}
     </View>
   );
 }
@@ -119,32 +118,53 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#f8fafc",
+  },
+  centeredContainer: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#f5f5f5",
+    padding: 24,
+    backgroundColor: "#f8fafc",
   },
-  text: {
+  loadingText: {
+    marginTop: 12,
+    fontSize: 16,
+    color: "#334155",
+  },
+  errorText: {
+    fontSize: 16,
+    color: "#dc2626",
+    textAlign: "center",
+  },
+  map: {
+    flex: 1,
+  },
+  infoPanel: {
+    position: "absolute",
+    left: 16,
+    right: 16,
+    bottom: 24,
+    padding: 16,
+    borderRadius: 8,
+    backgroundColor: "rgba(255, 255, 255, 0.95)",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.18,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  title: {
+    marginBottom: 8,
     fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 20,
-    color: "#333",
+    fontWeight: "700",
+    color: "#0f172a",
   },
-  button: {
-    marginVertical: 8,
-    width: 220,
-  },
-  previewContainer: {
-    alignItems: "center",
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: "#fff",
-    borderRadius: 15,
-    elevation: 3,
-  },
-  image: {
-    width: 280,
-    height: 220,
-    borderRadius: 10,
-    marginBottom: 10,
+  coordinateText: {
+    fontSize: 16,
+    color: "#1e293b",
   },
 });
