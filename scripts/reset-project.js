@@ -1,39 +1,114 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+/**
+ * This script is used to reset the project to a blank state.
+ * It deletes or moves the /src and /scripts directories to /example based on user input and creates a new /src/app directory with an index.tsx and _layout.tsx file.
+ * You can remove the `reset-project` script from package.json and safely delete this file after running it.
+ */
 
-const projectRoot = path.resolve(__dirname, '..');
+const fs = require("fs");
+const path = require("path");
+const readline = require("readline");
 
-// Files and directories to clean
-const filesToDelete = [
-  path.join(projectRoot, '.expo'),
-  path.join(projectRoot, 'node_modules'),
-  path.join(projectRoot, 'package-lock.json'),
-];
+const root = process.cwd();
+const oldDirs = ["src", "scripts"];
+const exampleDir = "example";
+const newAppDir = "src/app";
+const exampleDirPath = path.join(root, exampleDir);
 
-console.log('🧹 Resetting project...\n');
+const indexContent = `import { Text, View, StyleSheet } from "react-native";
 
-// Remove files and directories
-filesToDelete.forEach((file) => {
-  if (fs.existsSync(file)) {
-    console.log(`Removing ${path.relative(projectRoot, file)}...`);
-    if (fs.lstatSync(file).isDirectory()) {
-      fs.rmSync(file, { recursive: true, force: true });
-    } else {
-      fs.unlinkSync(file);
-    }
-  }
+export default function Index() {
+  return (
+    <View style={styles.container}>
+      <Text>Edit src/app/index.tsx to edit this screen.</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
+`;
+
+const layoutContent = `import { Stack } from "expo-router";
+
+export default function RootLayout() {
+  return <Stack />;
+}
+`;
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
 });
 
-console.log('\n📦 Installing dependencies...\n');
+const moveDirectories = async (userInput) => {
+  try {
+    if (userInput === "y") {
+      // Create the app-example directory
+      await fs.promises.mkdir(exampleDirPath, { recursive: true });
+      console.log(`📁 /${exampleDir} directory created.`);
+    }
 
-// Reinstall dependencies
-try {
-  execSync('npm install', { cwd: projectRoot, stdio: 'inherit' });
-  console.log('\n✅ Project reset successfully!');
-} catch (error) {
-  console.error('\n❌ Failed to install dependencies');
-  process.exit(1);
-}
+    // Move old directories to new app-example directory or delete them
+    for (const dir of oldDirs) {
+      const oldDirPath = path.join(root, dir);
+      if (fs.existsSync(oldDirPath)) {
+        if (userInput === "y") {
+          const newDirPath = path.join(root, exampleDir, dir);
+          await fs.promises.rename(oldDirPath, newDirPath);
+          console.log(`➡️ /${dir} moved to /${exampleDir}/${dir}.`);
+        } else {
+          await fs.promises.rm(oldDirPath, { recursive: true, force: true });
+          console.log(`❌ /${dir} deleted.`);
+        }
+      } else {
+        console.log(`➡️ /${dir} does not exist, skipping.`);
+      }
+    }
+
+    // Create new /src/app directory
+    const newAppDirPath = path.join(root, newAppDir);
+    await fs.promises.mkdir(newAppDirPath, { recursive: true });
+    console.log("\n📁 New /src/app directory created.");
+
+    // Create index.tsx
+    const indexPath = path.join(newAppDirPath, "index.tsx");
+    await fs.promises.writeFile(indexPath, indexContent);
+    console.log("📄 src/app/index.tsx created.");
+
+    // Create _layout.tsx
+    const layoutPath = path.join(newAppDirPath, "_layout.tsx");
+    await fs.promises.writeFile(layoutPath, layoutContent);
+    console.log("📄 src/app/_layout.tsx created.");
+
+    console.log("\n✅ Project reset complete. Next steps:");
+    console.log(
+      `1. Run \`npx expo start\` to start a development server.\n2. Edit src/app/index.tsx to edit the main screen.\n3. Put all your application code in /src, only screens and layout files should be in /src/app.${
+        userInput === "y"
+          ? `\n4. Delete the /${exampleDir} directory when you're done referencing it.`
+          : ""
+      }`
+    );
+  } catch (error) {
+    console.error(`❌ Error during script execution: ${error.message}`);
+  }
+};
+
+rl.question(
+  "Do you want to move existing files to /example instead of deleting them? (Y/n): ",
+  (answer) => {
+    const userInput = answer.trim().toLowerCase() || "y";
+    if (userInput === "y" || userInput === "n") {
+      moveDirectories(userInput).finally(() => rl.close());
+    } else {
+      console.log("❌ Invalid input. Please enter 'Y' or 'N'.");
+      rl.close();
+    }
+  }
+);
